@@ -12,7 +12,7 @@ class PaymentChrAdminForm(forms.ModelForm):
 
 
 class PaymentChrAdmin(admin.ModelAdmin):
-    list_display =('pay_date', 'user_info', 'amount', 'pay_purpose')
+    list_display =('pay_date', 'user_info', 'amount', 'site', 'pay_purpose')
     form = PaymentChrAdminForm
 
 

@@ -13,6 +13,7 @@ class PaymentChr(models.Model):
     type_op      = models.CharField(max_length=  2, verbose_name='Вид операции')    # 1
     bank_acc     = models.CharField(max_length=100, verbose_name='Банк')            # 65
     pay_purpose  = models.CharField(max_length=300, verbose_name='Назначение')      # 210
+    site         = models.IntegerField(verbose_name='Участок', default=None, null=True)
 
     class Meta:
         verbose_name = 'Поступление'
