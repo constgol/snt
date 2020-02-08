@@ -16,15 +16,17 @@ class PaymentChrAdmin(admin.ModelAdmin):
         (None, {
             'fields': (
                 'site',
-                ('pay_date', 's_pay_date'),
+                'pay_date',
+                'amount',
                 'user_info',
-                ('amount','s_amount'),
                 'pay_purpose',
             )
         }),
         ('Advanced options', {
             'classes': ('collapse',),
             'fields': (
+                's_pay_date',
+                's_amount',
                 'account_info',
                 'doc_num',
                 'type_op',
