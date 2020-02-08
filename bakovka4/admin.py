@@ -12,7 +12,27 @@ class PaymentChrAdminForm(forms.ModelForm):
 
 
 class PaymentChrAdmin(admin.ModelAdmin):
-    list_display =('pay_date', 'user_info', 'amount', 'site', 'pay_purpose')
+    fieldsets = (
+        (None, {
+            'fields': (
+                'site',
+                ('pay_date', 's_pay_date'),
+                'user_info',
+                ('amount','s_amount'),
+                'pay_purpose',
+            )
+        }),
+        ('Advanced options', {
+            'classes': ('collapse',),
+            'fields': (
+                'account_info',
+                'doc_num',
+                'type_op',
+                'bank_acc',
+            ),
+        }),
+    )
+    list_display =('site', 'pay_date', 'amount', 'user_info', 'pay_purpose')
     form = PaymentChrAdminForm
 
 
