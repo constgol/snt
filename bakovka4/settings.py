@@ -25,7 +25,10 @@ SECRET_KEY = ')wj^0^hvv4dw4#l5-f#3+#-hct6fqg!mhzeht6kdcm*we15c^z'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'bakovka4.ru',
+    'localhost',
+]
 
 
 # Application definition
