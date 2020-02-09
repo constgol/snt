@@ -35,7 +35,21 @@ class PaymentChrAdmin(admin.ModelAdmin):
         }),
     )
     list_display =('site', 'pay_date', 'amount', 'user_info', 'pay_purpose')
-    form = PaymentChrAdminForm
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        print ('user:' + request.user._wrapped.get_username())
+
+        if request.user.is_authenticated and request.user.has_perm('bakovka4.change_paymentchr'):
+            self.form = PaymentChrAdminForm
+        else:
+            self.form = forms.ModelForm
+        return self.changeform_view(request, object_id, form_url, extra_context)
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(site=1)
 
 
 admin.site.register(PaymentChr, PaymentChrAdmin)
