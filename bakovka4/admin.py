@@ -1,6 +1,8 @@
-from django.contrib import admin
-from .models import PaymentChr
 from django import forms
+from django.contrib import admin
+from django.db.models import Sum
+from .models import PaymentChr
+from .models import Land
 
 class PaymentChrAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -35,6 +37,7 @@ class PaymentChrAdmin(admin.ModelAdmin):
         }),
     )
     list_display =('site', 'pay_date', 'amount', 'user_info', 'pay_purpose')
+    ordering = ['site','pay_date']
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         print ('user:' + request.user._wrapped.get_username())
@@ -53,4 +56,26 @@ class PaymentChrAdmin(admin.ModelAdmin):
 
 
 admin.site.register(PaymentChr, PaymentChrAdmin)
+
+
+class PaymentChrInline(admin.TabularInline):
+    model = PaymentChr
+    fields = ('pay_date', 'amount', 'user_info', 'pay_purpose')
+    ordering = ['pay_date']
+    extra = 0
+
+
+class LandAdmin(admin.ModelAdmin):
+    list_display =('id','land_total')
+    ordering = ['id']
+
+    def land_total(self, obj):
+        return '{0:>10.2f}'\
+            .format(PaymentChr.objects.filter(site=obj.id).aggregate(Sum('amount'))['amount__sum'])
+
+    land_total.short_description = 'Сумма платежей'
+    inlines = [PaymentChrInline]
+
+
+admin.site.register(Land, LandAdmin)
 
