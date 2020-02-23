@@ -22,6 +22,7 @@ class PaymentChrAdmin(admin.ModelAdmin):
                 'amount',
                 'user_info',
                 'pay_purpose',
+                'purpose',
             )
         }),
         ('Advanced options', {
@@ -36,7 +37,7 @@ class PaymentChrAdmin(admin.ModelAdmin):
             ),
         }),
     )
-    list_display =('site', 'pay_date', 'amount', 'user_info', 'pay_purpose')
+    list_display =('site', 'pay_date', 'amount', 'user_info', 'pay_purpose', 'purpose')
     ordering = ['site','pay_date']
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
@@ -60,7 +61,7 @@ admin.site.register(PaymentChr, PaymentChrAdmin)
 
 class PaymentChrInline(admin.TabularInline):
     model = PaymentChr
-    fields = ('pay_date', 'amount', 'user_info', 'pay_purpose')
+    fields = ('pay_date', 'amount', 'user_info', 'pay_purpose', 'purpose')
     ordering = ['pay_date']
     extra = 0
 
