@@ -1,0 +1,39 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static 'admin/css/dashboard.css' %}">{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+    &rsaquo; <a href="{% url 'admin:app_list' app_label='bakovka4' %}">Баковка 4</a>
+    &rsaquo; Назначения
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+{% if purpose_list %}
+    <div class="app-bakovka4 module">
+    <table>
+    {% for key, val in purpose_list %}
+        <tr>
+            <td><a href="{{ key }}">{{ val.name }}</a></td>
+            <td align="right"><a href="{{ key }}">{{ val.total }}</a></td>
+        </tr>
+    {% endfor %}
+        <tr>
+            <td>Итого</td>
+            <td align="right">{{ total }}</td>
+        </tr>
+    </table>
+    </div>
+{% else %}
+    <p>{% trans 'You don’t have permission to view or edit anything.' %}</p>
+{% endif %}
+</div>
+{% endblock %}

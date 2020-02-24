@@ -1,7 +1,7 @@
 {% extends "admin/base_site.html" %}
 {% load i18n static %}
 
-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/dashboard.css" %}">{% endblock %}
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static 'admin/css/dashboard.css' %}">{% endblock %}
 
 {% block coltype %}colMS{% endblock %}
 
@@ -43,6 +43,13 @@
                 <td>&nbsp;</td>
             {% endif %}
             </tr>
+            {% if model.name == "Поступления" %}
+                <tr class="model-paymentchr">
+                    <th scope="row"><a href="/bakovka4/purpose/">Назначения</a></th>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+            {% endif %}
         {% endfor %}
         </table>
         </div>

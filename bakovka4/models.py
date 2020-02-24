@@ -13,14 +13,14 @@ class Land(models.Model):
 
 
 PAYMENT_PURPOSE = [
-    ( 'membership'     , 'членские взносы'   ),
-    ( 'electrycity'    , 'электричество'     ),
-    ( 'water'          , 'вода'              ),
-    ( 'road'           , 'дороги'            ),
-    ( 'truc'           , 'грузовой транспорт'),
-    ( 'common_cadaster', 'общий кадастр'     ),
-    ( 'common_water'   , 'общий водопровод'  ),
-    ( 'common_light'   , 'общий свет'        ),
+    ( 'membership'     , 'Членские взносы'   ),
+    ( 'electrycity'    , 'Электричество'     ),
+    ( 'water'          , 'Вода'              ),
+    ( 'road'           , 'Дороги'            ),
+    ( 'truc'           , 'Грузовой транспорт'),
+    ( 'common_cadaster', 'Общий кадастр'     ),
+    ( 'common_water'   , 'Общий водопровод'  ),
+    ( 'common_light'   , 'Общий свет'        ),
 ]
 
 class PaymentChr(models.Model):
