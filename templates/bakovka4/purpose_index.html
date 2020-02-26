@@ -1,0 +1,69 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/dashboard.css' %}">{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+    &rsaquo; <a href="{% url 'admin:app_list' app_label='bakovka4' %}">Баковка 4</a>
+    &rsaquo; Назначения
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    {% if purpose_list %}
+    <div class="results">
+        <table>
+            <thead>
+            <tr>
+                <th></th>
+                {% for year in years %}
+                <th class="align-right">{{ year }}</th>
+                {% endfor %}
+                <th class="align-right">всего</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for key, val in purpose_list %}
+            <tr class="{% cycle 'row1' 'row2' %}">
+                <td class="nowrap"><a href="{{ key }}/">{{ val.name }}</a></td>
+                {% for year in years %}
+                {% if year in val.purpose_year.keys %}
+                {% for y, ytot in val.purpose_year.items %}
+                {% if year == y %}
+                <td class="align-right"><a href="{{ key }}/{{ year }}/">{{ ytot|floatformat:2 }}</a></td>
+                {% endif %}
+                {% endfor %}
+                {% else %}
+                <td class="align-right">-</td>
+                {% endif %}
+                {% endfor %}
+                <td class="align-right"><a href="{{ key }}/">{{ val.total|floatformat:2 }}</a></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+            <tr style="font-weight: bold; background: #d0d0d0;">
+                <td style="font-size: 15px;">Итого</td>
+                {% for y in years %}
+                {% for year, total in years_list %}
+                {% if year == y %}
+                <th class="align-right">{{ total|floatformat:2 }}</th>
+                {% endif %}
+                {% endfor %}
+                {% endfor %}
+                <td class="align-right" style="font-size: 15px;">{{ total|stringformat:"10.2f" }}</td>
+            </tr>
+        </table>
+    </div>
+    {% else %}
+    <p>{% trans 'You don’t have permission to view or edit anything.' %}</p>
+    {% endif %}
+</div>
+{% endblock %}
