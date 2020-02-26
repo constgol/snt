@@ -19,5 +19,7 @@ from . import views
 
 urlpatterns = [
     path('', admin.site.urls),
-    path('bakovka4/purpose/', views.index, name='index'),
+    path('bakovka4/purpose/', views.purposeIndex, name='purpose_index'),
+    path('bakovka4/purpose/<slug:purpose>/', views.purposeByYear, name='purpose_by_year'),
+    path('bakovka4/purpose/<slug:purpose>/<int:year>/', views.purposeByMonth, name='purpose_by_month'),
 ]

@@ -13,6 +13,7 @@
     <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
     &rsaquo; <a href="{% url 'admin:app_list' app_label='bakovka4' %}">Баковка 4</a>
     &rsaquo; <a href="{% url 'purpose_index' %}">Назначения</a>
-    &rsaquo; {{ purpose_name }}
+    &rsaquo; <a href="{% url 'purpose_by_year' purpose=purpose %}">{{ purpose_name }}</a>
+    &rsaquo; {{ year }}
 </div>
 {% endblock %}

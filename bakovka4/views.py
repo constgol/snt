@@ -6,7 +6,7 @@ from .models import PaymentChr
 from .models import PAYMENT_PURPOSE
 
 
-def index(request):
+def purposeIndex(request):
     p_list = dict(PAYMENT_PURPOSE)
     p_list[''] = '-'
     purpose_list = PaymentChr.objects. \
@@ -53,4 +53,39 @@ def index(request):
         'years_list': yp.items(),
         **({}),
     }
+    return render(request, 'bakovka4/purpose_index.html', context)
+
+
+def purposeByYear(request, purpose):
+    p_list = dict(PAYMENT_PURPOSE)
+    ba = admin.site
+    ba._build_app_dict(request)
+    app_label = 'bakovka4'
+    app_dict = ba._build_app_dict(request, app_label)
+    context = {
+        **ba.each_context(request),
+        'app_list': [app_dict],
+        'app_label': app_label,
+        'purpose': purpose,
+        'purpose_name': p_list[purpose],
+        'title': 'Назначение платежа',
+    }
     return render(request, 'bakovka4/purpose_by_year.html', context)
+
+
+def purposeByMonth(request, purpose, year):
+    p_list = dict(PAYMENT_PURPOSE)
+    ba = admin.site
+    ba._build_app_dict(request)
+    app_label = 'bakovka4'
+    app_dict = ba._build_app_dict(request, app_label)
+    context = {
+        **ba.each_context(request),
+        'app_list': [app_dict],
+        'app_label': app_label,
+        'purpose': purpose,
+        'purpose_name': p_list[purpose],
+        'year': year,
+        'title': 'Назначение платежа',
+    }
+    return render(request, 'bakovka4/purpose_by_month.html', context)
