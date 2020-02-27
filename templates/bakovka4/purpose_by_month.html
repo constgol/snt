@@ -17,3 +17,59 @@
     &rsaquo; {{ year }}
 </div>
 {% endblock %}
+
+{% block content %}
+<div id="content-main">
+    {% if purpose_list %}
+    <div class="results">
+        <table>
+            <thead>
+            <tr>
+                <th>участок</th>
+                {% for month in m_list %}
+                <th class="align-right">{{ month|date:"F" }}</th>
+                {% endfor %}
+                <th class="align-right">всего</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for key, val in purpose_list %}
+            <tr class="{% cycle 'row1' 'row2' %}">
+                <td class="nowrap">{{ val.name }}</td>
+                {% for month in months %}
+                {% if month in val.purpose_month.keys %}
+                {% for m, ytot in val.purpose_month.items %}
+                {% if month == m %}
+                <td class="align-right">{{ ytot|floatformat:2 }}</td>
+                {% endif %}
+                {% endfor %}
+                {% else %}
+                <td class="align-right">-</td>
+                {% endif %}
+                {% endfor %}
+                <td class="align-right">{{ val.total|floatformat:2 }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+            <tr style="font-weight: bold; background: #d0d0d0;">
+                <td style="font-size: 15px;">Итого</td>
+                {% for month in months %}
+                {% if month in months_list.keys %}
+                {% for m, total in months_list.items %}
+                {% if month == m %}
+                <th class="align-right">{{ total|floatformat:2 }}</th>
+                {% endif %}
+                {% endfor %}
+                {% else %}
+                <td class="align-right">-</td>
+                {% endif %}
+                {% endfor %}
+                <td class="align-right" style="font-size: 15px;">{{ total|stringformat:"10.2f" }}</td>
+            </tr>
+        </table>
+    </div>
+    {% else %}
+    <p>{% trans 'You don’t have permission to view or edit anything.' %}</p>
+    {% endif %}
+</div>
+{% endblock %}
