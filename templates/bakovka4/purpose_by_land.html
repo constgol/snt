@@ -1,0 +1,54 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/dashboard.css' %}">{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+    &rsaquo; <a href="{% url 'admin:app_list' app_label='bakovka4' %}">Баковка 4</a>
+    &rsaquo; <a href="{% url 'purpose_index' %}">Назначения</a>
+    &rsaquo; <a href="{% url 'purpose_by_year' purpose=purpose %}">{{ purpose_name }}</a>
+    {% if year != '-' %}
+    &rsaquo; <a href="{% url 'purpose_by_month' purpose=purpose year=year %}">{{ year }}</a>
+    {% endif %}
+    &rsaquo; Участок №{{ land }}
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    {% if purpose_list %}
+    <div class="results">
+        <table>
+            <thead>
+            <tr>
+                <th>дата платежа</th>
+                <th class="align-right">сумма</th>
+                <th>назначение</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for payment in purpose_list %}
+            <tr class="{% cycle 'row1' 'row2' %}">
+                <td class="nowrap">{{ payment.pay_date|date:"d.m.Y" }}</td>
+                <td class="align-right">{{ payment.amount }}</td>
+                <td class="nowrap">{{ payment.pay_purpose }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+            <tr style="font-weight: bold; background: #d0d0d0;">
+                <td style="font-size: 15px;">Итого</td>
+                <td class="align-right">{{ total|floatformat:2 }}</td>
+                <td class="align-right"><!----></td>
+            </tr>
+        </table>
+    </div>
+    {% endif%}
+</div>
+{% endblock %}

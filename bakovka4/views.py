@@ -162,3 +162,44 @@ def purposeByMonth(request, purpose, year):
         'm_list': m_list,
     }
     return render(request, 'bakovka4/purpose_by_month.html', context)
+
+
+def purposeByLand(request, purpose, year, land):
+    p_list = dict(PAYMENT_PURPOSE)
+
+    if (year == '-'):
+        purpose_list = PaymentChr.objects. \
+            filter(site=land). \
+            filter(purpose=purpose). \
+            order_by('pay_date'). \
+            values('pay_date', 'pay_purpose', 'amount')
+    else:
+        purpose_list = PaymentChr.objects. \
+            filter(site=land). \
+            filter(purpose=purpose). \
+            filter(pay_date__year=year). \
+            order_by('pay_date'). \
+            values('pay_date', 'pay_purpose', 'amount')
+
+    total = 0
+    for payment in purpose_list:
+        total += payment['amount']
+    ba = admin.site
+    ba._build_app_dict(request)
+    app_label = 'bakovka4'
+    app_dict = ba._build_app_dict(request, app_label)
+    context = {
+        **ba.each_context(request),
+        'app_list': [app_dict],
+        'app_label': app_label,
+        'purpose': purpose,
+        'purpose_list': purpose_list,
+        'purpose_name': p_list[purpose],
+        'year': year,
+        'total': total,
+        'title': p_list[purpose] + ' / Участок ' + str(land),
+        'land': land
+    }
+    if year != '-':
+        context['title'] += ' (' + str(year) + ')'
+    return render(request, 'bakovka4/purpose_by_land.html', context)

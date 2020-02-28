@@ -35,7 +35,7 @@
             <tbody>
             {% for key, val in purpose_list %}
             <tr class="{% cycle 'row1' 'row2' %}">
-                <td class="nowrap">{{ val.name }}</td>
+                <td class="nowrap"><a href="{{ val.name }}">{{ val.name }}</a></td>
                 {% for month in months %}
                 {% if month in val.purpose_month.keys %}
                 {% for m, ytot in val.purpose_month.items %}
@@ -47,7 +47,9 @@
                 <td class="align-right">-</td>
                 {% endif %}
                 {% endfor %}
-                <td class="align-right">{{ val.total|floatformat:2 }}</td>
+                <td class="align-right">
+                    <a href="{{ val.name }}">{{ val.total|floatformat:2 }}</a>
+                </td>
             </tr>
             {% endfor %}
             </tbody>
