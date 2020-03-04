@@ -1,0 +1,11 @@
+#land-charges {
+    float: right;
+    width: 100px;
+    position: relative;
+    margin-right: -600px;
+    white-space: nowrap;
+}
+
+#land-charges td {
+    text-align: right;
+}

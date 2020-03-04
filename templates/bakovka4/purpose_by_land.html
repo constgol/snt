@@ -1,8 +1,10 @@
 {% extends "admin/base_site.html" %}
 {% load i18n static %}
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/dashboard.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'bakovka4/land-charges.css' %}">
+{% endblock %}
 
-{% block extrastyle %}{{ block.super }}
-<link rel="stylesheet" type="text/css" href="{% static 'admin/css/dashboard.css' %}">{% endblock %}
 
 {% block coltype %}colMS{% endblock %}
 
@@ -51,4 +53,92 @@
     </div>
     {% endif%}
 </div>
+{% endblock %}
+
+{% block sidebar %}
+{% if purpose == 'membership' %}
+<div id="land-charges">
+    <div class="module" id="recent-actions-module">
+        <p>Начисления</p>
+        <table>
+            <thead>
+            <tr>
+                <th>Период</th>
+                <th>Месяцев</th>
+                <th>За месяц</th>
+                <th>Всего</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>06.2014 - 12.2014</td>
+                <td>7</td>
+                <td>600</td>
+                <td>4200</td>
+            </tr>
+            <tr>
+                <td>01.2015 - 06.2015</td>
+                <td>6</td>
+                <td>600</td>
+                <td>3600</td>
+            </tr>
+            <tr>
+                <td>07.2015 - 12.2015</td>
+                <td>6</td>
+                <td>800</td>
+                <td>4800</td>
+            </tr>
+            <tr>
+                <td>01.2016 - 12.2016</td>
+                <td>12</td>
+                <td>800</td>
+                <td>9600</td>
+            </tr>
+            <tr>
+                <td>01.2017 - 05.2017</td>
+                <td>5</td>
+                <td>800</td>
+                <td>4000</td>
+            </tr>
+            <tr>
+                <td>06.2017 - 12.2017</td>
+                <td>7</td>
+                <td>850</td>
+                <td>5950</td>
+            </tr>
+            <tr>
+                <td>01.2018 - 12.2018</td>
+                <td>12</td>
+                <td>850</td>
+                <td>10200</td>
+            </tr>
+            <tr>
+                <td>01.2019 - 05.2019</td>
+                <td>5</td>
+                <td>850</td>
+                <td>4250</td>
+            </tr>
+            <tr>
+                <td>06.2019 - 12.2019</td>
+                <td>7</td>
+                <td>1000</td>
+                <td>7000</td>
+            </tr>
+            <tr>
+                <td>01.2020 - 03.2020</td>
+                <td>3</td>
+                <td>1000</td>
+                <td>3000</td>
+            </tr>
+            </tbody>
+            <tr>
+                <td style="text-align: left;">Итого</td>
+                <td></td>
+                <td></td>
+                <td>56600</td>
+            </tr>
+        </table>
+    </div>
+</div>
+{% endif %}
 {% endblock %}
