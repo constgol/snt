@@ -2,7 +2,7 @@
 {% load i18n static %}
 {% block extrastyle %}
 <link rel="stylesheet" type="text/css" href="{% static 'admin/css/dashboard.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'bakovka4/land-charges.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'bakovka4/land_charges.css' %}">
 {% endblock %}
 
 
@@ -58,7 +58,36 @@
 {% block sidebar %}
 {% if purpose == 'membership' %}
 <div id="land-charges">
-    <div class="module" id="recent-actions-module">
+    <div class="module" id="charges-calc">
+        <p>Калькулятор</p>
+        <table>
+            <tr>
+                <td>С месяца</td>
+                <td><input type="text" id="fr_month" value="04.2019">
+                    <input type='button' id='fm_up' value="&#x02C6;" style="padding: 0px 5px;"
+                           onClick="javascript:chMonth('fr_month', 1 )">
+                    <input type='button' id='fm_do' value="&#x032C;" style="padding: 0px 8px;"
+                           onClick="javascript:chMonth('fr_month', -1)">
+                </td>
+            </tr>
+            <tr>
+                <td>По месяц</td>
+                <td><input type="text" id="to_month" value="02.2020">
+                    <input type='button' id='tm_up' value="&#x02C6;" style="padding: 0px 5px;"
+                           onClick="javascript:chMonth('to_month', 1 )">
+                    <input type='button' id='tm_do' value="&#x032C;" style="padding: 0px 8px;"
+                           onClick="javascript:chMonth('to_month', -1)">
+                </td>
+            </tr>
+        </table>
+        <input type='button' id='count' value='Рассчитать'
+               onClick='javascript:countCharge (
+                        document.getElementById("fr_month").value,
+                        document.getElementById("to_month").value)'>
+        <div id="months"></div>
+        <div id="intervals"></div>
+    </div>
+    <div class="module" id="charges-reference">
         <p>Начисления</p>
         <table>
             <thead>
@@ -71,64 +100,28 @@
             </thead>
             <tbody>
             <tr>
-                <td>06.2014 - 12.2014</td>
-                <td>7</td>
+                <td>06.2014 - 06.2015</td>
+                <td>13</td>
                 <td>600</td>
-                <td>4200</td>
+                <td>7800</td>
             </tr>
             <tr>
-                <td>01.2015 - 06.2015</td>
-                <td>6</td>
-                <td>600</td>
-                <td>3600</td>
-            </tr>
-            <tr>
-                <td>07.2015 - 12.2015</td>
-                <td>6</td>
+                <td>07.2015 - 05.2017</td>
+                <td>23</td>
                 <td>800</td>
-                <td>4800</td>
+                <td>18400</td>
             </tr>
             <tr>
-                <td>01.2016 - 12.2016</td>
-                <td>12</td>
-                <td>800</td>
-                <td>9600</td>
-            </tr>
-            <tr>
-                <td>01.2017 - 05.2017</td>
-                <td>5</td>
-                <td>800</td>
-                <td>4000</td>
-            </tr>
-            <tr>
-                <td>06.2017 - 12.2017</td>
-                <td>7</td>
+                <td>06.2017 - 05.2019</td>
+                <td>24</td>
                 <td>850</td>
-                <td>5950</td>
+                <td>20400</td>
             </tr>
             <tr>
-                <td>01.2018 - 12.2018</td>
-                <td>12</td>
-                <td>850</td>
-                <td>10200</td>
-            </tr>
-            <tr>
-                <td>01.2019 - 05.2019</td>
-                <td>5</td>
-                <td>850</td>
-                <td>4250</td>
-            </tr>
-            <tr>
-                <td>06.2019 - 12.2019</td>
-                <td>7</td>
+                <td>06.2019 - 03.2020</td>
+                <td>10</td>
                 <td>1000</td>
-                <td>7000</td>
-            </tr>
-            <tr>
-                <td>01.2020 - 03.2020</td>
-                <td>3</td>
-                <td>1000</td>
-                <td>3000</td>
+                <td>10000</td>
             </tr>
             </tbody>
             <tr>
@@ -141,4 +134,10 @@
     </div>
 </div>
 {% endif %}
+{% block charge_calc %}
+<script type="text/javascript"
+        id="charge-calc"
+        src="{% static 'bakovka4/charges_calc.js' %}">
+</script>
+{% endblock %}
 {% endblock %}
