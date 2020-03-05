@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.db.models import Sum
 from django.db.models.functions import Extract
 from .models import PaymentChr
+from .models import Land
 from .models import PAYMENT_PURPOSE
 from datetime import date
 
@@ -166,7 +167,7 @@ def purposeByMonth(request, purpose, year):
 
 def purposeByLand(request, purpose, year, land):
     p_list = dict(PAYMENT_PURPOSE)
-
+    l = Land.objects.filter(id=land).first()
     if (year == '-'):
         purpose_list = PaymentChr.objects. \
             filter(site=land). \
@@ -198,7 +199,9 @@ def purposeByLand(request, purpose, year, land):
         'year': year,
         'total': total,
         'title': p_list[purpose] + ' / Участок ' + str(land),
-        'land': land
+        'land': land,
+        'memb_from': l.memb_from,
+        'memb_to': l.memb_to,
     }
     if year != '-':
         context['title'] += ' (' + str(year) + ')'

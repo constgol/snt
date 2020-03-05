@@ -25,6 +25,12 @@
 
 {% block content %}
 <div id="content-main">
+    <div id="charge_part">
+        Расчетный период с <span id="memb_from" style="color: #ff0000">{{ memb_from }}</span>
+        по <span id="memb_to" style="color: #ff0000">{{ memb_to }}</span>
+        Итого <span id="charge_sum" style="color: #008000; font-size: 18px; font-weight: bold;"></span>
+    </div>
+    <p></p>
     {% if purpose_list %}
     <div class="results">
         <table>
@@ -83,7 +89,7 @@
         <input type='button' id='count' value='Рассчитать'
                onClick='javascript:countCharge (
                         document.getElementById("fr_month").value,
-                        document.getElementById("to_month").value)'>
+                        document.getElementById("to_month").value, 1)'>
         <div id="months"></div>
         <div id="intervals"></div>
     </div>
@@ -138,6 +144,14 @@
 <script type="text/javascript"
         id="charge-calc"
         src="{% static 'bakovka4/charges_calc.js' %}">
+</script>
+<script>
+    window.onload = function() {
+        document.getElementById("charge_sum").innerHTML = countCharge (
+            document.getElementById("memb_from").innerHTML,
+            document.getElementById("memb_to").innerHTML, 0);
+    }
+
 </script>
 {% endblock %}
 {% endblock %}

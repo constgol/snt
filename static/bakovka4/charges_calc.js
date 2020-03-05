@@ -12,8 +12,7 @@ function chMonth (input_id, mm) {
     elem.value =  m1.month + "." + m1.year;
 }
 
-
-function countCharge(start, end) {
+function countCharge(start, end, show) {
     var st_parsed = start.match (/^(.{2})\.(.{4})$/);
     var en_parsed = end.match   (/^(.{2})\.(.{4})$/);
     st = { year: st_parsed[2], month: st_parsed[1] };
@@ -78,10 +77,13 @@ function countCharge(start, end) {
             "</td><td style='text-align: right'>" + tot + "</td>";
     }
 //    document.getElementById("months").innerHTML = "<table>" + b + "</table>";
-    document.getElementById("intervals").innerHTML = "<table><thead>" +
-    "<tr><th colspan=2>Период</th><th>Месяцев</th><th>За месяц</th><th>Всего</th></tr></thead>" +
-    "<tbody><tr>" + a + "</tr></tbody><tr>" +
-        "<td style='text-align: left;'>Итого</td><td></td><td></td><td></td><td style='text-align: right'> " + total + "</td></tr></table>";
+    if ( show === 1) {
+        document.getElementById("intervals").innerHTML = "<table><thead>" +
+        "<tr><th colspan=2>Период</th><th>Месяцев</th><th>За месяц</th><th>Всего</th></tr></thead>" +
+        "<tbody><tr>" + a + "</tr></tbody><tr>" +
+            "<td style='text-align: left;'>Итого</td><td></td><td></td><td></td><td style='text-align: right'> " + total + "</td></tr></table>";
+    }
+    return total;
 }
 
 function addMonth (month, year, months) {
