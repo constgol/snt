@@ -23,12 +23,27 @@
     <div class="results">
         <table>
             <thead>
-            <tr>
-                <th>участок</th>
+            <tr class="nowrap">
+                <th rowspan="2">участок</th>
+                <th colspan="{{ years|length }}" style="text-align: center;">год</th>
+                <th class="align-right">всего</th>
+                {% if purpose == 'membership' %}
+                <th colspan="4" style="text-align: center;">расчетный период</th>
+                <th style="text-align: center;">на {{ cur_month }}</th>
+                {% endif %}
+            </tr>
+            <tr class="nowrap">
                 {% for year in years %}
                 <th class="align-right"><a href="{{ year }}/">{{ year }}</a></th>
                 {% endfor %}
-                <th class="align-right">всего</th>
+                <th class="align-right"></th>
+                {% if purpose == 'membership' %}
+                <th>с месяца</th>
+                <th>по месяц</th>
+                <th>к оплате</th>
+                <th>долг / переплата</th>
+                <th>долг / переплата</th>
+                {% endif %}
             </tr>
             </thead>
             <tbody>
@@ -51,6 +66,13 @@
                 <td class="align-right">
                     <a href="-/{{ val.name }}">{{ val.total|floatformat:2 }}</a>
                 </td>
+                {% if purpose == 'membership' %}
+                <td>{{ val.memb_from }}</td>
+                <td>{{ val.memb_to }}</td>
+                <td class="align-right">{{ val.charge_sum|floatformat:2 }}</td>
+                <td class="align-right" style="color: {{ val.cp_col }}">{{ val.debt_calc_period|floatformat:2 }}</td>
+                <td class="align-right" style="color: {{ val.cm_col }}">{{ val.debt_cur_month|floatformat:2 }}</td>
+                {% endif %}
             </tr>
             {% endfor %}
             </tbody>
@@ -63,7 +85,14 @@
                 {% endif %}
                 {% endfor %}
                 {% endfor %}
-                <td class="align-right" style="font-size: 15px;">{{ total|stringformat:"10.2f" }}</td>
+                <td class="align-right" style="font-size: 15px;">{{ total|floatformat:2 }}</td>
+                {% if purpose == 'membership' %}
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="align-right" style="font-size: 15px;">{{ tot_dcp|floatformat:2 }}</td>
+                <td class="align-right" style="font-size: 15px;">{{ tot_dcm|floatformat:2 }}</td>
+                {% endif %}
             </tr>
         </table>
     </div>

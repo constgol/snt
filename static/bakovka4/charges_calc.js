@@ -39,25 +39,25 @@ function countCharge(start, end, show) {
         }
         cur1 = addMonth (charges[i].month, charges[i].year, -1);
         if ( monthsBetween ( cur1, en ) <= 1 ) {
-        cur1.year  = en.year;
-	    cur1.month = en.month;
-        br = 1;
-    }
-    mb = monthsBetween ( { year: pyear, month: pmonth }, cur1 );
-    tot = prev * mb;
+            cur1.year  = en.year;
+	        cur1.month = en.month;
+            br = 1;
+        }
+        mb = monthsBetween ( { year: pyear, month: pmonth }, cur1 );
+        tot = prev * mb;
         total += tot;
-         a += "<td>" + cur1.month + '.' + cur1.year +
-             "</td><td>" + mb +
-             "</td><td style='text-align: right'>" + prev +
-             "</td><td style='text-align: right'>" + tot +
-             "</td>";
-         if ( br == 1 ){
-             break;
-         }
-         a += "</tr><tr><td>" + charges[i].month + '.' + charges[i].year + "</td>";
-         prev   = charges[i].amount;
-         pyear  = charges[i].year;
-         pmonth = charges[i].month;
+        a += "<td>" + cur1.month + '.' + cur1.year +
+            "</td><td>" + mb +
+            "</td><td style='text-align: right'>" + prev +
+            "</td><td style='text-align: right'>" + tot +
+            "</td>";
+        if ( br == 1 ){
+            break;
+        }
+        a += "</tr><tr><td>" + charges[i].month + '.' + charges[i].year + "</td>";
+        prev   = charges[i].amount;
+        pyear  = charges[i].year;
+        pmonth = charges[i].month;
     }
     dmonth = en.month;
     dyear  = en.year;

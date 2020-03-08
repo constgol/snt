@@ -6,6 +6,16 @@ from .models import PaymentChr
 from .models import Land
 from .models import PAYMENT_PURPOSE
 from datetime import date
+import re
+
+charges = [
+    {'year': "2012", 'month': "01", 'amount': 600},
+    {'year': "2015", 'month': "07", 'amount': 800},
+    {'year': "2017", 'month': "06", 'amount': 850},
+    {'year': "2019", 'month': "06", 'amount': 1000}
+]
+
+mon_year = re.compile('^(.{2})\.(.{4})$')
 
 
 def purposeIndex(request):
@@ -67,6 +77,8 @@ def purposeByYear(request, purpose):
     pp = {}
     total = 0
     yp = {}
+    tot_dcp = 0
+    tot_dcm = 0
     for row in purpose_list:
         if row['site'] in pp:
             pp[row['site']]['total'] += row['total']
@@ -79,12 +91,43 @@ def purposeByYear(request, purpose):
                     row['purpose_year']: row['total']
                 }
             }
-
         if row['purpose_year'] in yp:
             yp[row['purpose_year']] += row['total']
         else:
             yp[row['purpose_year']] = row['total']
         total += row['total']
+
+    cred = "#ff0000"
+    cgreen = "#008000"
+    for p in pp.values():
+        land = Land.objects.filter(id=p['name']).first()
+        fr_pars = mon_year.match(land.memb_from)
+        to_pars = mon_year.match(land.memb_to)
+        fr = {'month': fr_pars.group(1), 'year': fr_pars.group(2)}
+        to = {'month': to_pars.group(1), 'year': to_pars.group(2)}
+        charge_sum = calcCharge(fr, to)
+        dcp = p['total'] - charge_sum
+        p['memb_from'] = land.memb_from
+        p['memb_to'] = land.memb_to
+        p['charge_sum'] = charge_sum
+        p['debt_calc_period'] = dcp
+        if dcp >= 0:
+            p['cp_col'] = cgreen
+        else:
+            p['cp_col'] = cred
+        tot_dcp += dcp
+
+        cdate = {'month': date.today().month, 'year': date.today().year}
+        if (monthsBetween(to, cdate) > 1):
+            p['cm_col'] = cred
+            to1 = addMonth(to, 1)
+            dcm = (- calcCharge(to1, cdate))
+        else:
+            p['cm_col'] = cgreen
+            cur1 = addMonth(cdate, 1)
+            dcm = (calcCharge(cur1, to))
+        p['debt_cur_month'] = dcm
+        tot_dcm += dcm
 
     years = list(yp.keys())
     years.sort()
@@ -101,6 +144,8 @@ def purposeByYear(request, purpose):
         'purpose_list': pp.items(),
         'purpose_name': p_list[purpose],
         'total': total,
+        'tot_dcp': tot_dcp,
+        'tot_dcm': tot_dcm,
         'title': p_list[purpose],
         'years': years,
         'years_list': yp.items(),
@@ -206,3 +251,48 @@ def purposeByLand(request, purpose, year, land):
     if year != '-':
         context['title'] += ' (' + str(year) + ')'
     return render(request, 'bakovka4/purpose_by_land.html', context)
+
+
+def calcCharge(st, en):
+    total = 0
+    prev = 0
+    found = False
+    br = False
+    pdate = {}
+    for charge in charges:
+        if (not found):
+            pdate = st
+            if (monthsBetween(st, charge) <= 1):
+                prev = charge['amount']
+                continue
+            else:
+                found = True
+        cur1 = addMonth(charge, -1)
+        if (monthsBetween(cur1, en) <= 1):
+            cur1 = en
+            br = True
+        mb = monthsBetween(pdate, cur1)
+        tot = prev * mb
+        total += tot
+        if (br):
+            break
+        prev = charge['amount']
+        pdate = charge
+    ddate = en
+    mb = monthsBetween(pdate, ddate)
+    if (mb >= 1 and not br):
+        tot = prev * mb
+        total += tot
+
+    return total
+
+
+def monthsBetween(start, end):
+    return (int(end['year']) - int(start['year'])) * 12 + int(end['month']) - int(start['month']) + 1
+
+
+def addMonth(start, months):
+    month = int(start['month']) + months - 1
+    year = int(start['year']) + month // 12
+    month = month % 12 + 1
+    return {'year': year, 'month': month}

@@ -182,21 +182,21 @@
              debt_cur_month.style.color = red;
              var to1 = addMonth ( to_month, to_year, 1 );
              to1 = to1.month + "." + to1.year;
-             debt_cur_month.innerHTML = - countCharge ( to1, cur_date, 0 );
+             debt_cur_month.innerHTML = (- countCharge ( to1, cur_date, 0 )).toFixed(2);
         }
         else {
              debt_cur_month.style.color = green;
              cur1 = addMonth ( cur_month, cur_year, 1 );
              cur1 = cur1.month + "." + cur1.year;
-             debt_cur_month.innerHTML = countCharge ( cur1, to_date, 0 );
+             debt_cur_month.innerHTML = (countCharge ( cur1, to_date, 0 )).toFixed(2);
         }
 
-        document.getElementById("charge_sum").innerHTML = charge_sum;
+        document.getElementById("charge_sum").innerHTML = charge_sum.toFixed(2);
 
         var charge_total = document.getElementById("charge_total").innerHTML;
         charge_total = charge_total.replace (/,.{2}$/, "");
         var debt_calc_period = document.getElementById("debt_calc_period");
-        debt_calc_period.innerHTML   = charge_total - charge_sum;
+        debt_calc_period.innerHTML   = (charge_total - charge_sum).toFixed(2);
         debt_calc_period.style.color = charge_total - charge_sum >= 0 ? green : red;
     }
 
