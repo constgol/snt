@@ -27,6 +27,7 @@
 <div id="content-main">
     <div id="charge_part">
         <table>
+            {% if purpose == 'membership' %}
             <tr>
                 <td>К оплате за расчетный период с <span id="memb_from" style="color: #ff0000">{{ memb_from }}</span>
                 по <span id="memb_to" style="color: #ff0000">{{ memb_to }}</span></td>
@@ -40,6 +41,7 @@
                 <td>Долг / переплата по <span id="cur_month" style="color: #ff0000"></span></td>
                 <td id="debt_cur_month" style="font-size: 18px; font-weight: bold; text-align: right;"></td>
             </tr>
+            {% endif %}
         </table>
     </div>
     <p></p>
