@@ -22,5 +22,8 @@ urlpatterns = [
     path('bakovka4/purpose/', views.purposeIndex, name='purpose_index'),
     path('bakovka4/purpose/<slug:purpose>/', views.purposeByYear, name='purpose_by_year'),
     path('bakovka4/purpose/<slug:purpose>/<int:year>/', views.purposeByMonth, name='purpose_by_month'),
-    path('bakovka4/purpose/<slug:purpose>/<slug:year>/<int:land>', views.purposeByLand, name='purpose_by_land'),
+    path('bakovka4/purpose/<slug:purpose>/<slug:year>/<int:land>/', views.purposeByLand, name='purpose_by_land'),
+    path('bakovka4/journal/', views.journal, name='journal'),
+    path('bakovka4/journal/<int:journal>/', views.journal, name='journal'),
+    path('bakovka4/journal/<int:journal>/<int:page>/', views.journal, name='journal'),
 ]

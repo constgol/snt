@@ -50,6 +50,7 @@
         <table>
             <thead>
             <tr>
+                <th>id</th>
                 <th>дата платежа</th>
                 <th class="align-right">сумма</th>
                 <th>назначение</th>
@@ -58,6 +59,10 @@
             <tbody>
             {% for payment in purpose_list %}
             <tr class="{% cycle 'row1' 'row2' %}">
+                <td class="align-right">
+                    <a href="{% url 'admin:app_list' app_label='bakovka4' %}paymentchr/{{payment.id}}/change/">
+                        {{ payment.id }}</a>
+                </td>
                 <td class="nowrap">{{ payment.pay_date|date:"d.m.Y" }}</td>
                 <td class="align-right">{{ payment.amount }}</td>
                 <td class="nowrap">{{ payment.pay_purpose }}</td>
@@ -65,7 +70,7 @@
             {% endfor %}
             </tbody>
             <tr style="font-weight: bold; background: #d0d0d0;">
-                <td style="font-size: 15px;">Итого</td>
+                <td style="font-size: 15px;" colspan="2">Итого</td>
                 <td class="align-right" id="charge_total">{{ total|floatformat:2 }}</td>
                 <td class="align-right"><!----></td>
             </tr>

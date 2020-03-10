@@ -1,0 +1,92 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/dashboard.css' %}">
+{% endblock %}
+
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+    &rsaquo; <a href="{% url 'admin:app_list' app_label='bakovka4' %}">Баковка 4</a>
+    &rsaquo; <a href="{% url 'journal' %}">Журналы</a>
+    &rsaquo; <a href="{% url 'journal' journal=journal %}">Журнал {{ journal }}</a>
+    &rsaquo; Страница {{ page }}
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    {% if page_line %}
+    <div class="results">
+        <p>
+            Итого по странице {{ page_sum|floatformat:2 }}
+        </p>
+        <p>
+            Журналы
+            {% for j in journals %}
+            {% if j.journal_id == journal %}
+            <span id="j{{ journal.journal_id }}">{{ j.journal_id }}</span>
+            {% else %}
+            <a href="{% url 'journal' journal=j.journal_id %}">{{ j.journal_id }}</a>
+            {% endif %}
+            {% endfor %}
+        </p>
+        <p>
+            Страницы
+            {% for p in pages %}
+            {% if p.page_num == page %}
+            <span id="p{{ page.page_num }}">{{ p.page_num }}</span>
+            {% else %}
+            <a href="{% url 'journal' page=p.page_num journal=journal %}">{{ p.page_num }}</a>
+            {% endif %}
+            {% endfor %}
+        </p>
+        <p></p>
+        <table>
+            <thead>
+            <tr class="nowrap">
+                <th>id</th>
+                <th>строка</th>
+                <th>запись</th>
+                <th>плательщик</th>
+                <th>участок</th>
+                <th>описание</th>
+                <th>сумма</th>
+                <th>дата</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for line in page_line %}
+            <tr class="{% cycle 'row1' 'row2' %}">
+                <td class="align-right">
+                    <a href="{% url 'admin:app_list' app_label='bakovka4' %}paymentchr/{{line.id}}/change/">
+                        {{ line.id }}</a>
+                </td>
+                <td>{{ line.line_num }}</td>
+                <td>{{ line.journal_pay_num }}</td>
+                <td {% if journal !=2 %}class="nowrap" {% endif %}>{{ line.user_info }}</td>
+                <td>{{ line.site_id }}</td>
+                <td {% if journal !=2 %}class="nowrap" {% endif %}>{{ line.pay_purpose }}</td>
+                <td class="align-right">{{ line.amount }}</td>
+                <td class="nowrap">{{ line.pay_date|date:"d.m.Y" }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+            <tr style="font-weight: bold; background: #d0d0d0;">
+                <td colspan="6">Итого</td>
+                <td>{{ page_sum|floatformat:2 }}</td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+    {% else %}
+    <p>{% trans 'You don’t have permission to view or edit anything.' %}</p>
+    {% endif %}
+</div>
+{% endblock %}
+

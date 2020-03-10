@@ -218,14 +218,14 @@ def purposeByLand(request, purpose, year, land):
             filter(site=land). \
             filter(purpose=purpose). \
             order_by('pay_date'). \
-            values('pay_date', 'pay_purpose', 'amount')
+            values('id', 'pay_date', 'pay_purpose', 'amount')
     else:
         purpose_list = PaymentChr.objects. \
             filter(site=land). \
             filter(purpose=purpose). \
             filter(pay_date__year=year). \
             order_by('pay_date'). \
-            values('pay_date', 'pay_purpose', 'amount')
+            values('id', 'pay_date', 'pay_purpose', 'amount')
 
     total = 0
     for payment in purpose_list:
@@ -251,6 +251,30 @@ def purposeByLand(request, purpose, year, land):
     if year != '-':
         context['title'] += ' (' + str(year) + ')'
     return render(request, 'bakovka4/purpose_by_land.html', context)
+
+
+def journal(request, journal=1, page=1):
+    ba = admin.site
+    ba._build_app_dict(request)
+    app_label = 'bakovka4'
+    app_dict = ba._build_app_dict(request, app_label)
+    journals = PaymentChr.objects.values('journal_id').order_by('journal_id').distinct()
+    pages = PaymentChr.objects.filter(journal_id=journal).values('page_num').order_by('page_num').distinct()
+    page_line = PaymentChr.objects.filter(journal_id=journal).filter(page_num=page).order_by('line_num')
+    page_sum = PaymentChr.objects.filter(journal_id=journal).filter(page_num=page).aggregate(Sum('amount'))
+    context = {
+        **ba.each_context(request),
+        'app_list': [app_dict],
+        'app_label': app_label,
+        'journal': journal,
+        'journals': journals,
+        'page': page,
+        'page_line': page_line,
+        'page_sum': page_sum['amount__sum'],
+        'pages': pages,
+        'title': 'Журнал ' + str(journal) + ' / Страница ' + str(page),
+    }
+    return render(request, 'bakovka4/journal.html', context)
 
 
 def calcCharge(st, en):

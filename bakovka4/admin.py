@@ -17,12 +17,16 @@ class PaymentChrAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'fields': (
+                'journal_pay_num',
+                'page_num',
+                'line_num',
                 'site',
                 'pay_date',
                 'amount',
                 'user_info',
                 'pay_purpose',
                 'purpose',
+                'journal_id',
             )
         }),
         ('Advanced options', {
@@ -37,8 +41,9 @@ class PaymentChrAdmin(admin.ModelAdmin):
             ),
         }),
     )
-    list_display =('site', 'pay_date', 'amount', 'user_info', 'pay_purpose', 'purpose')
-    ordering = ['site','pay_date']
+    list_display =('id', 'journal_id', 'journal_pay_num', 'page_num', 'line_num', 'site',
+                   'pay_date', 'amount', 'user_info', 'pay_purpose', 'purpose')
+    ordering = ['journal_id','id']
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         print ('user:' + request.user._wrapped.get_username())

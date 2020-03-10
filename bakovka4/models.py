@@ -43,6 +43,7 @@ PAYMENT_PURPOSE = [
 
 
 class PaymentChr(models.Model):
+    id = models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     s_pay_date = models.CharField(max_length=10, verbose_name='Дата оплаты', blank=True, default='')  # 10
     pay_date = models.DateField(verbose_name='Дата оплаты')  # 10
     user_info = models.CharField(max_length=200, verbose_name='Плательщик')
@@ -57,6 +58,10 @@ class PaymentChr(models.Model):
     purpose = models.CharField(max_length=50, verbose_name='Назначение', choices=PAYMENT_PURPOSE, blank=True,
                                default='')
     parent_pay_id = models.ForeignKey('self', verbose_name='Из платежа', on_delete=models.PROTECT, null=True)
+    journal_id = models.IntegerField(verbose_name = 'Номер журнала', default=1)
+    journal_pay_num = models.IntegerField(verbose_name='Номер в журнале', default=0)
+    page_num = models.IntegerField(verbose_name='Страница', default=1)
+    line_num = models.IntegerField(verbose_name='Строка', default=1)
 
     class Meta:
         verbose_name = 'Поступление'
