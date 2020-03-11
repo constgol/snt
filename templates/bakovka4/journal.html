@@ -69,9 +69,9 @@
                 </td>
                 <td>{{ line.line_num }}</td>
                 <td>{{ line.journal_pay_num }}</td>
-                <td {% if journal !=2 %}class="nowrap" {% endif %}>{{ line.user_info }}</td>
+                <td {% if journal != 2 %} class="nowrap" {% endif %}>{{ line.user_info }}</td>
                 <td>{{ line.site_id }}</td>
-                <td {% if journal !=2 %}class="nowrap" {% endif %}>{{ line.pay_purpose }}</td>
+                <td {% if journal != 2 %} class="nowrap" {% endif %}>{{ line.pay_purpose }}</td>
                 <td class="align-right">{{ line.amount }}</td>
                 <td class="nowrap">{{ line.pay_date|date:"d.m.Y" }}</td>
             </tr>
