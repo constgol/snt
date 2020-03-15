@@ -24,7 +24,7 @@
     {% if page_line %}
     <div class="results">
         <p>
-            Итого по странице {{ page_sum|floatformat:2 }}
+            Итого по странице<span  style="font-size: 16px;"> {{ page_sum|floatformat:2 }}</span>
         </p>
         <p>
             Журналы
@@ -32,7 +32,7 @@
             {% if j.journal_id == journal %}
             <span id="j{{ journal.journal_id }}">{{ j.journal_id }}</span>
             {% else %}
-            <a href="{% url 'journal' journal=j.journal_id %}">{{ j.journal_id }}</a>
+            <a style="font-size: 16px;" href="{% url 'journal' journal=j.journal_id %}">&nbsp;{{ j.journal_id }}&nbsp;</a>
             {% endif %}
             {% endfor %}
         </p>
@@ -42,7 +42,7 @@
             {% if p.page_num == page %}
             <span id="p{{ page.page_num }}">{{ p.page_num }}</span>
             {% else %}
-            <a href="{% url 'journal' page=p.page_num journal=journal %}">{{ p.page_num }}</a>
+            <a style="font-size: 16px;" href="{% url 'journal' page=p.page_num journal=journal %}">{{ p.page_num }}</a>
             {% endif %}
             {% endfor %}
         </p>

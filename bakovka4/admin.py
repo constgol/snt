@@ -66,7 +66,7 @@ admin.site.register(PaymentChr, PaymentChrAdmin)
 
 class PaymentChrInline(admin.TabularInline):
     model = PaymentChr
-    fields = ('pay_date', 'amount', 'user_info', 'pay_purpose', 'purpose')
+    fields = ('id', 'journal_id', 'page_num', 'line_num', 'journal_pay_num', 'pay_date', 'amount', 'user_info', 'pay_purpose', 'purpose')
     ordering = ['pay_date']
     extra = 0
 

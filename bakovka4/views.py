@@ -260,7 +260,7 @@ def journal(request, journal=1, page=1):
     app_dict = ba._build_app_dict(request, app_label)
     journals = PaymentChr.objects.values('journal_id').order_by('journal_id').distinct()
     pages = PaymentChr.objects.filter(journal_id=journal).values('page_num').order_by('page_num').distinct()
-    page_line = PaymentChr.objects.filter(journal_id=journal).filter(page_num=page).order_by('line_num')
+    page_line = PaymentChr.objects.filter(journal_id=journal).filter(page_num=page).order_by('pay_date', 'journal_pay_num', 'line_num')
     page_sum = PaymentChr.objects.filter(journal_id=journal).filter(page_num=page).aggregate(Sum('amount'))
     context = {
         **ba.each_context(request),
