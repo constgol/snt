@@ -2,7 +2,9 @@ from django import forms
 from django.contrib import admin
 from django.db.models import Sum
 from .models import PaymentChr
+from .models import Indication
 from .models import Land
+from .models import Meter
 
 class PaymentChrAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -71,6 +73,13 @@ class PaymentChrInline(admin.TabularInline):
     extra = 0
 
 
+class MeterInLine(admin.TabularInline):
+    model = Meter
+    fields = ('id', 'number', 'type')
+    ordering = ['type', 'number']
+    extra = 0
+
+
 class LandAdmin(admin.ModelAdmin):
     list_display =('id','land_total')
     ordering = ['id']
@@ -80,8 +89,21 @@ class LandAdmin(admin.ModelAdmin):
             .format(PaymentChr.objects.filter(site=obj.id).aggregate(Sum('amount'))['amount__sum'])
 
     land_total.short_description = 'Сумма платежей'
-    inlines = [PaymentChrInline]
+    inlines = [MeterInLine, PaymentChrInline]
 
 
 admin.site.register(Land, LandAdmin)
 
+class IndicationInLine(admin.TabularInline):
+    model = Indication
+    fields = ('id', 'meter', 'indic_date', 'indic_value')
+    extra = 0
+
+
+class MeterAdmin(admin.ModelAdmin):
+    list_display = ('id', 'type', 'number', 'site')
+    ordering = ['type', 'number']
+
+    inlines = [IndicationInLine]
+
+admin.site.register(Meter, MeterAdmin)

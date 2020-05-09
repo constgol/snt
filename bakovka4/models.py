@@ -69,3 +69,29 @@ class PaymentChr(models.Model):
 
     def __str__(self):
         return ''
+
+METER_TYPE = [
+    ('electrycity', 'Электричество'),
+    ('water', 'Вода'),
+]
+
+class Meter(models.Model):
+     site = models.ForeignKey(Land, verbose_name='Участок', on_delete=models.PROTECT, null=True)
+     number = models.CharField(max_length=100, verbose_name='Номер счетчика', blank=True, default='')
+     type = models.CharField(max_length=50, verbose_name='Тип счетчика', choices=METER_TYPE, blank=True, default='')
+
+     class Meta:
+         verbose_name = 'Счетчик'
+         verbose_name_plural = 'Счетчики'
+
+     def __str__(self):
+         return self.number
+
+class Indication(models.Model):
+    meter = models.ForeignKey(Meter, verbose_name='Счетчик', on_delete=models.PROTECT, null=True)
+    indic_date = models.DateField(verbose_name='Дата показания')
+    indic_value = models.DecimalField(max_digits=10, decimal_places=5, verbose_name='Показание', default=0)
+
+    class Meta:
+        verbose_name = 'Показание'
+        verbose_name_plural = 'Показания'
