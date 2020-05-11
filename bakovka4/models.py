@@ -14,6 +14,15 @@ def validate_month(value):
             params={'value': value},
         )
 
+def validate_year(value):
+    res = re.match('[0-9]{4}', value)
+    if (not (res
+             and 1990 <= int(res.group(0)) <= 2030)):
+        raise ValidationError(
+            _('%(value) - год должен быть формате "YYYY"'),
+            params={'value': value},
+        )
+
 
 class Land(models.Model):
     id = models.IntegerField(verbose_name='N участка', primary_key=True)
@@ -95,3 +104,13 @@ class Indication(models.Model):
     class Meta:
         verbose_name = 'Показание'
         verbose_name_plural = 'Показания'
+
+
+class Auto(models.Model):
+    site = models.ForeignKey(Land, verbose_name='Участок', on_delete=models.PROTECT, null=True)
+    year = models.CharField(max_length=4, verbose_name='Год', validators=[validate_year], default='2020')
+    count = models.IntegerField(verbose_name='Количество машин', default=0)
+
+    class Meta:
+        verbose_name = 'Автомобили'
+        verbose_name_plural = 'Автомобили'

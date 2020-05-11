@@ -1,10 +1,11 @@
 from django import forms
 from django.contrib import admin
 from django.db.models import Sum
-from .models import PaymentChr
+from .models import Auto
 from .models import Indication
 from .models import Land
 from .models import Meter
+from .models import PaymentChr
 
 class PaymentChrAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -80,6 +81,13 @@ class MeterInLine(admin.TabularInline):
     extra = 0
 
 
+class AutoInLine(admin.TabularInline):
+    model = Auto
+    fields = ('id', 'year', 'count')
+    ordering = ['year']
+    extra = 0
+
+
 class LandAdmin(admin.ModelAdmin):
     list_display =('id','land_total')
     ordering = ['id']
@@ -89,7 +97,7 @@ class LandAdmin(admin.ModelAdmin):
             .format(PaymentChr.objects.filter(site=obj.id).aggregate(Sum('amount'))['amount__sum'])
 
     land_total.short_description = 'Сумма платежей'
-    inlines = [MeterInLine, PaymentChrInline]
+    inlines = [MeterInLine, AutoInLine, PaymentChrInline]
 
 
 admin.site.register(Land, LandAdmin)
@@ -101,9 +109,16 @@ class IndicationInLine(admin.TabularInline):
 
 
 class MeterAdmin(admin.ModelAdmin):
-    list_display = ('id', 'type', 'number', 'site')
-    ordering = ['type', 'number']
+    list_display = ('id', 'type', 'site', 'number')
+    ordering = ['type', 'site', 'number']
 
     inlines = [IndicationInLine]
 
 admin.site.register(Meter, MeterAdmin)
+
+
+class AutoAdmin(admin.ModelAdmin):
+    list_display = ('id', 'site', 'year', 'count')
+    ordering = ['site', 'year']
+
+admin.site.register(Auto, AutoAdmin)
