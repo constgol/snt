@@ -1,11 +1,12 @@
-from django.shortcuts import render
+from datetime import date
 from django.contrib import admin
 from django.db.models import Sum
 from django.db.models.functions import Extract
-from .models import PaymentChr
+from django.shortcuts import render
+from .models import Auto
 from .models import Land
+from .models import PaymentChr
 from .models import PAYMENT_PURPOSE
-from datetime import date
 import re
 
 charges = [
@@ -77,8 +78,11 @@ def purposeByYear(request, purpose):
     pp = {}
     total = 0
     yp = {}
+    ya = {}
+    years_auto = []
     tot_dcp = 0
     tot_dcm = 0
+    tot_dca = 0
     for row in purpose_list:
         if row['site'] in pp:
             pp[row['site']]['total'] += row['total']
@@ -89,13 +93,45 @@ def purposeByYear(request, purpose):
                 'total': row['total'],
                 'purpose_year': {
                     row['purpose_year']: row['total']
-                }
+                },
+                'auto_year': {},
+                'auto_tot': 0,
             }
         if row['purpose_year'] in yp:
             yp[row['purpose_year']] += row['total']
         else:
             yp[row['purpose_year']] = row['total']
         total += row['total']
+
+    if purpose == 'road':
+        auto_list = Auto.objects.all()
+        for auto in auto_list:
+            ysum = 50
+            if auto.count > 0:
+                ysum = auto.count * 250
+            if auto.site.id in pp:
+                pp[auto.site.id]['auto_tot'] += ysum
+                pp[auto.site.id]['auto_year'][auto.year] = auto.count
+            else:
+                pp[auto.site.id] = {
+                    'name': auto.site.id,
+                    'total': 0,
+                    'purpose_year': {},
+                    'auto_year': {
+                        auto.year: auto.count
+                    },
+                    'auto_tot': ysum,
+                }
+
+            if auto.year in ya:
+                ya[auto.year] += auto.count
+            else:
+                ya[auto.year] = auto.count
+
+            if auto.year not in years_auto:
+                years_auto.append (auto.year)
+
+        years_auto.sort()
 
     cred = "#ff0000"
     cgreen = "#008000"
@@ -129,8 +165,20 @@ def purposeByYear(request, purpose):
         p['debt_cur_month'] = dcm
         tot_dcm += dcm
 
+        dca = p['total'] - p['auto_tot']
+        p['debt_auto'] = dca
+        if dca >= 0:
+            p['ca_col'] = cgreen
+        else:
+            p['ca_col'] = cred
+        tot_dca += dca
+
     years = list(yp.keys())
     years.sort()
+
+    pp1 = {}
+    for key in sorted(list(pp.keys())):
+        pp1[key] = pp[key]
 
     ba = admin.site
     ba._build_app_dict(request)
@@ -141,13 +189,16 @@ def purposeByYear(request, purpose):
         'app_list': [app_dict],
         'app_label': app_label,
         'purpose': purpose,
-        'purpose_list': pp.items(),
+        'purpose_list': pp1.items(),
         'purpose_name': p_list[purpose],
         'total': total,
+        'tot_dca': tot_dca,
         'tot_dcp': tot_dcp,
         'tot_dcm': tot_dcm,
         'title': p_list[purpose],
+        'ya' : ya,
         'years': years,
+        'years_auto' : years_auto,
         'years_list': yp.items(),
         **({}),
     }
@@ -227,6 +278,26 @@ def purposeByLand(request, purpose, year, land):
             order_by('pay_date'). \
             values('id', 'pay_date', 'pay_purpose', 'amount')
 
+    years_auto = []
+    auto_tot = 0
+    auto_from = ''
+    auto_to = ''
+    if purpose == 'road':
+        auto_list = Auto.objects.filter(site=land).order_by('year').values('year', 'count')
+        for auto in auto_list:
+            auto_to = auto['year']
+            if auto_from == '':
+                auto_from = auto['year']
+            ysum = 50
+            if auto['count'] > 0:
+                ysum = auto['count'] * 250
+            years_auto.append( {
+                'year': auto['year'],
+                'count': auto['count'],
+                'sum': ysum,
+            } )
+            auto_tot += ysum
+
     total = 0
     for payment in purpose_list:
         total += payment['amount']
@@ -234,10 +305,22 @@ def purposeByLand(request, purpose, year, land):
     ba._build_app_dict(request)
     app_label = 'bakovka4'
     app_dict = ba._build_app_dict(request, app_label)
+
+    cred = "#ff0000"
+    cgreen = "#008000"
+    debt_auto = total - auto_tot
+    ca_col = cred
+    if debt_auto >= 0:
+        ca_col = cgreen
     context = {
         **ba.each_context(request),
         'app_list': [app_dict],
         'app_label': app_label,
+        'auto_from': auto_from,
+        'auto_to': auto_to,
+        'auto_tot': auto_tot,
+        'ca_col': ca_col,
+        'debt_auto': debt_auto,
         'purpose': purpose,
         'purpose_list': purpose_list,
         'purpose_name': p_list[purpose],
@@ -247,6 +330,7 @@ def purposeByLand(request, purpose, year, land):
         'land': land,
         'memb_from': l.memb_from,
         'memb_to': l.memb_to,
+        'years_auto': years_auto,
     }
     if year != '-':
         context['title'] += ' (' + str(year) + ')'

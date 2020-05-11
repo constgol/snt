@@ -85,16 +85,16 @@ METER_TYPE = [
 ]
 
 class Meter(models.Model):
-     site = models.ForeignKey(Land, verbose_name='Участок', on_delete=models.PROTECT, null=True)
-     number = models.CharField(max_length=100, verbose_name='Номер счетчика', blank=True, default='')
-     type = models.CharField(max_length=50, verbose_name='Тип счетчика', choices=METER_TYPE, blank=True, default='')
+    site = models.ForeignKey(Land, verbose_name='Участок', on_delete=models.PROTECT, null=True)
+    number = models.CharField(max_length=100, verbose_name='Номер счетчика', blank=True, default='')
+    type = models.CharField(max_length=50, verbose_name='Тип счетчика', choices=METER_TYPE, blank=True, default='')
 
-     class Meta:
-         verbose_name = 'Счетчик'
-         verbose_name_plural = 'Счетчики'
+    class Meta:
+        verbose_name = 'Счетчик'
+        verbose_name_plural = 'Счетчики'
 
-     def __str__(self):
-         return self.number
+    def __str__(self):
+        return ''
 
 class Indication(models.Model):
     meter = models.ForeignKey(Meter, verbose_name='Счетчик', on_delete=models.PROTECT, null=True)
@@ -114,3 +114,6 @@ class Auto(models.Model):
     class Meta:
         verbose_name = 'Автомобили'
         verbose_name_plural = 'Автомобили'
+
+    def __str__(self):
+        return ''

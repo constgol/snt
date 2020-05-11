@@ -26,23 +26,30 @@
             <tr class="nowrap">
                 <th rowspan="2">участок</th>
                 <th colspan="{{ years|length }}" style="text-align: center;">год</th>
-                <th class="align-right">всего</th>
+                <th rowspan="2" class="align-right">всего</th>
                 {% if purpose == 'membership' %}
                 <th colspan="4" style="text-align: center;">расчетный период</th>
                 <th style="text-align: center;">на {{ cur_month }}</th>
+                {% elif purpose == 'road' %}
+                <th colspan="{{ years_auto|length }}" style="text-align: center;">год</th>
+                <th rowspan="2" class="align-right">к оплате</th>
+                <th rowspan="2" class="align-right">долг / переплата</th>
                 {% endif %}
             </tr>
             <tr class="nowrap">
                 {% for year in years %}
                 <th class="align-right"><a href="{{ year }}/">{{ year }}</a></th>
                 {% endfor %}
-                <th class="align-right"></th>
                 {% if purpose == 'membership' %}
                 <th>с месяца</th>
                 <th>по месяц</th>
                 <th>к оплате</th>
                 <th>долг / переплата</th>
                 <th>долг / переплата</th>
+                {% elif purpose == 'road' %}
+                {% for year in years_auto %}
+                <th class="align-right"><a href="{{ year }}/">{{ year }}</a></th>
+                {% endfor %}
                 {% endif %}
             </tr>
             </thead>
@@ -72,6 +79,20 @@
                 <td class="align-right">{{ val.charge_sum|floatformat:2 }}</td>
                 <td class="align-right" style="color: {{ val.cp_col }}">{{ val.debt_calc_period|floatformat:2 }}</td>
                 <td class="align-right" style="color: {{ val.cm_col }}">{{ val.debt_cur_month|floatformat:2 }}</td>
+                {% elif purpose == 'road' %}
+                {% for year in years_auto %}
+                {% if year in val.auto_year.keys %}
+                {% for y, ytot in val.auto_year.items %}
+                {% if year == y %}
+                <td class="align-right">{{ ytot }}</td>
+                {% endif %}
+                {% endfor %}
+                {% else %}
+                <td class="align-right">-</td>
+                {% endif %}
+                {% endfor %}
+                <td class="align-right">{{ val.auto_tot|floatformat:2 }}</td>
+                <td class="align-right" style="color: {{ val.ca_col }}">{{ val.debt_auto|floatformat:2 }}</td>
                 {% endif %}
             </tr>
             {% endfor %}
@@ -92,6 +113,18 @@
                 <td></td>
                 <td class="align-right" style="font-size: 15px;">{{ tot_dcp|floatformat:2 }}</td>
                 <td class="align-right" style="font-size: 15px;">{{ tot_dcm|floatformat:2 }}</td>
+                {% elif purpose == 'road' %}
+                {% for year in years_auto %}
+                {% if year in ya.keys %}
+                {% for y, ytot in ya.items %}
+                {% if year == y %}
+                <td class="align-right">{{ ytot }}</td>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+                {% endfor %}
+                <td></td>
+                <td class="align-right" style="font-size: 15px;">{{ tot_dca|floatformat:2 }}</td>
                 {% endif %}
             </tr>
         </table>

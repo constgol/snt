@@ -41,6 +41,19 @@
                 <td>Долг / переплата по <span id="cur_month" style="color: #ff0000"></span></td>
                 <td id="debt_cur_month" style="font-size: 18px; font-weight: bold; text-align: right;"></td>
             </tr>
+            {% elif purpose == 'road' %}
+            <tr>
+                <td>К оплате за расчетный период с <span id="auto_from" style="color: #ff0000">{{ auto_from }}</span>
+                по <span id="auto_to" style="color: #ff0000">{{ auto_to }}</span></td>
+                <td id="auto_sum" style="color: #008000; font-size: 18px; font-weight: bold; text-align: right;">
+                    {{ auto_tot|floatformat:2 }}</td>
+            </tr>
+            <tr>
+                <td>Долг / переплата за расчетный период</td>
+                <td id="debt_auto" style="color: {{ ca_col }}; font-size: 18px; font-weight: bold; text-align: right;">
+                    {{ debt_auto|floatformat:2 }}
+                </td>
+            </tr>
             {% endif %}
         </table>
     </div>
@@ -158,6 +171,35 @@
         </table>
     </div>
 </div>
+{% elif purpose == 'road' %}
+{% if years_auto %}
+<div id="land-charges">
+    <div class="module" id="charges-calc">
+        <table>
+            <thead>
+            <tr>
+                <th>год</th>
+                <th>количество машин</th>
+                <th>сумма</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for year in years_auto %}
+            <tr>
+                <td>{{ year.year }}</td>
+                <td class="align-right">{{ year.count }}</td>
+                <td class="align-right">{{ year.sum|floatformat:2 }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+            <tr style="font-weight: bold; background: #d0d0d0;">
+                <td style="font-size: 15px;" colspan="2">Итого</td>
+                <td class="align-right" id="auto_tot">{{ auto_tot|floatformat:2 }}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+{% endif %}
 {% endif %}
 {% block charge_calc %}
 <script type="text/javascript"
@@ -206,7 +248,6 @@
         debt_calc_period.innerHTML   = (charge_total - charge_sum).toFixed(2);
         debt_calc_period.style.color = charge_total - charge_sum >= 0 ? green : red;
     }
-
 </script>
 {% endblock %}
 {% endblock %}
