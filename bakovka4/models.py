@@ -48,6 +48,7 @@ PAYMENT_PURPOSE = [
     ('common_cadaster', 'Общий кадастр'),
     ('common_water', 'Общий водопровод'),
     ('common_light', 'Общий свет'),
+    ('', 'Не распределено'),
 ]
 
 

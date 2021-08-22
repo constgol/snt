@@ -59,9 +59,10 @@ class PaymentChrAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        if request.user.is_superuser:
-            return qs
-        return qs.filter(site__in =[4,1])
+#        if request.user.is_superuser:
+#            return qs
+#        return qs.filter(site__in =[4,1])
+        return qs
 
 
 admin.site.register(PaymentChr, PaymentChrAdmin)
